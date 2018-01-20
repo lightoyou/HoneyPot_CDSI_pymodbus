@@ -1,5 +1,10 @@
+============================================================
+Introduction
+============================================================
+This respository is a sub part of HoneyPot_CDSI !
+
 .. image:: https://travis-ci.org/riptideio/pymodbus.svg?branch=master
-   :target: https://travis-ci.org/riptideio/pymodbus 
+   :target: https://travis-ci.org/riptideio/pymodbus
 
 .. image:: https://badges.gitter.im/Join%20Chat.svg
    :target: https://gitter.im/pymodbus_dev/Lobby
@@ -60,7 +65,7 @@ in this case means how many Virtual IP addresses are allowed).
 
 For more information please browse the project documentation:
 
-http://riptideio.github.io/pymodbus/ 
+http://riptideio.github.io/pymodbus/
 or
 http://readthedocs.org/docs/pymodbus/en/latest/index.html
 
@@ -71,7 +76,7 @@ Example Code
 For those of you that just want to get started fast, here you go::
 
     from pymodbus.client.sync import ModbusTcpClient
-    
+
     client = ModbusTcpClient('127.0.0.1')
     client.write_coil(1, True)
     result = client.read_coils(1,1)
@@ -85,7 +90,7 @@ need, feel free to submit them so others can benefit.
 Also, if you have questions, please ask them on the mailing list
 so that others can benefit from the results and so that I can
 trace them. I get a lot of email and sometimes these requests
-get lost in the noise: http://groups.google.com/group/pymodbus or 
+get lost in the noise: http://groups.google.com/group/pymodbus or
 at gitter:  https://gitter.im/pymodbus_dev/Lobby
 
 ------------------------------------------------------------
@@ -149,7 +154,7 @@ Use make to perform a range of activities
      make check      check coding style (PEP-8, PEP-257)
      make test       run the test suite, report coverage
      make tox        run the tests on all Python versions
-     make clean      cleanup all temporary files 
+     make clean      cleanup all temporary files
 
 ------------------------------------------------------------
 Contributing
