@@ -53,7 +53,7 @@ from pymodbus.compat import iteritems, iterkeys, itervalues, get_next
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("python-logstash-logger")
 
 
 #---------------------------------------------------------------------------#

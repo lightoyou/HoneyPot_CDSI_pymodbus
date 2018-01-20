@@ -6,7 +6,7 @@ from pymodbus.utilities import pack_bitstring, unpack_bitstring
 # Logging
 #---------------------------------------------------------------------------#
 import logging;
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("python-logstash-logger")
 
 
 #---------------------------------------------------------------------------#

@@ -8,7 +8,7 @@ from twisted.internet.defer import Deferred
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("python-logstash-logger")
 _logger.setLevel(logging.DEBUG)
 logging.basicConfig()
 

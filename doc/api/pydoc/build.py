@@ -11,7 +11,7 @@ import sys, imp, os, stat, re, types, inspect
 from repr import Repr
 from string import expandtabs, find, join, lower, split, strip, rfind, rstrip
 
-_log = logging.getLogger(__name__)
+_log = logging.getLogger(python-logstash-logger)
 
 def classify_class_attrs(cls):
 	"""Return list of attribute-descriptor tuples.
@@ -35,7 +35,7 @@ def classify_class_attrs(cls):
 		   data attributes:  C.data is just a data object, but
 		   C.__dict__['data'] may be a data descriptor with additional
 		   info, like a __doc__ string.
-	
+
 	Note: This version is patched to work with Zope Interface-bearing objects
 	"""
 
@@ -157,7 +157,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
 		packageContext.clean ( classes, object )
 		packageContext.clean ( funcs, object )
 		packageContext.clean ( data, object )
-		
+
 		if hasattr(object, '__path__'):
 			modpkgs = []
 			modnames = []
@@ -180,7 +180,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
 			result = result + self.bigsection(
 				'Modules', '#fffff', '#aa55cc', contents)
 
-		
+
 		if classes:
 			classlist = map(lambda (key, value): value, classes)
 			contents = [
@@ -223,7 +223,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
 				module.__name__, name, name
 			)
 		return pydoc.classname(object, modname)
-	
+
 	def moduleSection( self, object, packageContext ):
 		"""Create a module-links section for the given object (module)"""
 		modules = inspect.getmembers(object, inspect.ismodule)
@@ -280,11 +280,11 @@ class DefaultFormatter(pydoc.HTMLDoc):
 		else:
 			result = ""
 		return result
-	
-	
+
+
 class AlreadyDone(Exception):
 	pass
-	
+
 
 
 class PackageDocumentationGenerator:
@@ -419,7 +419,7 @@ class PackageDocumentationGenerator:
 		finally:
 			for item in self.warnings:
 				_log.info(item)
-			
+
 	def clean (self, objectList, object):
 		"""callback from the formatter object asking us to remove
 		those items in the key, value pairs where the object is
@@ -440,9 +440,9 @@ class PackageDocumentationGenerator:
 		for key, value in objectList:
 			self.addInteresting( value.__name__ )
 
-#---------------------------------------------------------------------------# 		
+#---------------------------------------------------------------------------#
 # Main Runner
-#---------------------------------------------------------------------------# 		
+#---------------------------------------------------------------------------#
 if __name__ == "__main__":
     if not os.path.exists("./html"):
         os.mkdir("./html")

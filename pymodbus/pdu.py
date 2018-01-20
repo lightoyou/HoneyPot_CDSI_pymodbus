@@ -11,7 +11,7 @@ from pymodbus.compat import iteritems, int2byte, byte2int
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("python-logstash-logger")
 
 
 #---------------------------------------------------------------------------#

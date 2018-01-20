@@ -7,7 +7,7 @@ from twisted.internet.defer import Deferred
 # configure the client logging
 # --------------------------------------------------------------------------- # 
 import logging
-log = logging.getLogger(__name__)
+log = logging.getLogger("python-logstash-logger")
 
 class Runner(object):
     """

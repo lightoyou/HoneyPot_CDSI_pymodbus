@@ -27,5 +27,5 @@ except ImportError:
         def emit(self, record):
             pass
 
-__logging.getLogger(__name__).addHandler(__null())
+__logging.getLogger("python-logstash-logger").addHandler(__null())
 
