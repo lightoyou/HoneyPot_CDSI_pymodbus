@@ -39,7 +39,11 @@ class ModbusBaseRequestHandler(socketserver.BaseRequestHandler):
     def setup(self):
         ''' Callback for when a client connects
         '''
-        _logger.debug("Client Connected [%s:%s]" % self.client_address)
+        extra = {
+            "ip_source"   : self.client_address[0]
+            "port_source" : self.client_address[1]
+        }
+        _logger.debug("Client Connected", extra = extra)
         self.running = True
         self.framer = self.server.framer(self.server.decoder)
         self.server.threads.append(self)
@@ -47,7 +51,11 @@ class ModbusBaseRequestHandler(socketserver.BaseRequestHandler):
     def finish(self):
         ''' Callback for when a client disconnects
         '''
-        _logger.debug("Client Disconnected [%s:%s]" % self.client_address)
+        extra = {
+            "ip_source"   : self.client_address[0]
+            "port_source" : self.client_address[1]
+        }
+        _logger.debug("Client Disconnected",extra = extra)
         self.server.threads.remove(self)
 
     def execute(self, request):
@@ -126,7 +134,7 @@ class ModbusSingleRequestHandler(ModbusBaseRequestHandler):
             #self.server.control.Counter.BusMessage += 1
             pdu = self.framer.buildPacket(message)
             if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug('send: %s' % b2a_hex(pdu))
+                _logger.debug('udo : %s' % b2a_hex(pdu))
             return self.request.send(pdu)
 
 
