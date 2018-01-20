@@ -40,8 +40,8 @@ class ModbusBaseRequestHandler(socketserver.BaseRequestHandler):
         ''' Callback for when a client connects
         '''
         extra = {
-            "ip_source"   : self.client_address[0]
-            "port_source" : self.client_address[1]
+            'ip_source'   : self.client_address[0],
+            'port_source' : self.client_address[1],
         }
         _logger.debug("Client Connected", extra = extra)
         self.running = True
@@ -52,8 +52,8 @@ class ModbusBaseRequestHandler(socketserver.BaseRequestHandler):
         ''' Callback for when a client disconnects
         '''
         extra = {
-            "ip_source"   : self.client_address[0]
-            "port_source" : self.client_address[1]
+        'ip_source'   : self.client_address[0],
+        'port_source' : self.client_address[1],
         }
         _logger.debug("Client Disconnected",extra = extra)
         self.server.threads.remove(self)
