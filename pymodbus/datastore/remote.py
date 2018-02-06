@@ -5,8 +5,8 @@ from pymodbus.interfaces import IModbusSlaveContext
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-#_logger = logging.getLogger("python-logstash-logger")
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("python-logstash-logger")
+#_logger = logging.getLogger(__name__)
 
 
 #---------------------------------------------------------------------------#

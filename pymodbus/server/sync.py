@@ -22,8 +22,8 @@ from pymodbus.compat import socketserver, byte2int
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-#_logger = logging.getLogger("python-logstash-logger")
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("python-logstash-logger")
+#_logger = logging.getLogger(__name__)
 
 #---------------------------------------------------------------------------#
 # Protocol Handlers
@@ -55,7 +55,7 @@ class ModbusBaseRequestHandler(socketserver.BaseRequestHandler):
         'ip_source'   : self.client_address[0],
         'port_source' : self.client_address[1],
         }
-        _logger.debug("Client Disconnected",extra = extra)
+        _logger.debug("Client Disconnected" + extra,extra = extra)
         self.server.threads.remove(self)
 
     def execute(self, request):

@@ -30,8 +30,8 @@ from pymodbus.compat import byte2int
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-#_logger = logging.getLogger("python-logstash-logger")
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger("python-logstash-logger")
+#_logger = logging.getLogger(__name__)
 
 
 #---------------------------------------------------------------------------#
@@ -118,7 +118,7 @@ class ServerDecoder(IModbusDecoder):
         '''
         return self.__lookup.get(function_code, ExceptionResponse)
 
-    def _helper(self, data, client_address):
+    def _helper(self, data, client_address=None):
         '''
         This factory is used to generate the correct request object
         from a valid request packet. This decodes from a list of the
@@ -128,12 +128,18 @@ class ServerDecoder(IModbusDecoder):
         :returns: The decoded request or illegal function request object
         '''
         function_code = byte2int(data[0])
-        extra = {
-            'ip_source'   : client_address[0],
-            'port_source' : client_address[1],
-            'fonction_code' : function_code,
-			'requete' : str(data)
-        }
+        if client_address != None :
+           extra = {
+                'ip_source'   : client_address[0],
+                'port_source' : client_address[1],
+                'fonction_code' : function_code,
+	    		'requete' : str(data)
+            }
+        else :
+            extra = {
+                'fonction_code' : function_code,
+	    		'requete' : str(data)
+            }
         #_logger.debug("test:"+ str(data))
         _logger.debug("traité " + str(extra),extra=extra)
         request = self.__lookup.get(function_code, lambda: None)()
