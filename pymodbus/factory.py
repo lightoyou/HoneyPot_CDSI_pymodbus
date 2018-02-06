@@ -25,12 +25,13 @@ from pymodbus.mei_message import *
 from pymodbus.register_read_message import *
 from pymodbus.register_write_message import *
 from pymodbus.compat import byte2int
-
+#from pymodbus.server.sync import *
 #---------------------------------------------------------------------------#
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger("python-logstash-logger")
+#_logger = logging.getLogger("python-logstash-logger")
+_logger = logging.getLogger(__name__)
 
 
 #---------------------------------------------------------------------------#
@@ -97,14 +98,14 @@ class ServerDecoder(IModbusDecoder):
         for f in self.__sub_function_table:
             self.__sub_lookup[f.function_code][f.sub_function_code] = f
 
-    def decode(self, message):
+    def decode(self, message, client_address=None):
         ''' Wrapper to decode a request packet
 
         :param message: The raw modbus request packet
         :return: The decoded modbus message or None if error
         '''
         try:
-            return self._helper(message)
+            return self._helper(message, client_address)
         except ModbusException as er:
             _logger.warning("Unable to decode request %s" % er)
         return None
@@ -117,7 +118,7 @@ class ServerDecoder(IModbusDecoder):
         '''
         return self.__lookup.get(function_code, ExceptionResponse)
 
-    def _helper(self, data):
+    def _helper(self, data, client_address):
         '''
         This factory is used to generate the correct request object
         from a valid request packet. This decodes from a list of the
@@ -127,7 +128,14 @@ class ServerDecoder(IModbusDecoder):
         :returns: The decoded request or illegal function request object
         '''
         function_code = byte2int(data[0])
-        _logger.debug("Factory Request[%d]" % function_code)
+        extra = {
+            'ip_source'   : client_address[0],
+            'port_source' : client_address[1],
+            'fonction_code' : function_code,
+			'requete' : str(data)
+        }
+        #_logger.debug("test:"+ str(data))
+        _logger.debug("traité " + str(extra),extra=extra)
         request = self.__lookup.get(function_code, lambda: None)()
         if not request:
             request = IllegalFunctionRequest(function_code)
@@ -213,7 +221,7 @@ class ClientDecoder(IModbusDecoder):
         '''
         return self.__lookup.get(function_code, ExceptionResponse)
 
-    def decode(self, message):
+    def decode(self, message, client_address=None):
         ''' Wrapper to decode a response packet
 
         :param message: The raw packet to decode

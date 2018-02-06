@@ -8,7 +8,8 @@ from pymodbus.compat import iteritems, itervalues
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger("python-logstash-logger")
+#_logger = logging.getLogger("python-logstash-logger")
+_logger = logging.getLogger(__name__)
 
 
 #---------------------------------------------------------------------------#
@@ -59,7 +60,7 @@ class ModbusSlaveContext(IModbusSlaveContext):
         :returns: True if the request in within range, False otherwise
         '''
         if not self.zero_mode: address = address + 1
-        _logger.debug("validate[%d] %d:%d" % (fx, address, count))
+        #_logger.debug("validate[%d] %d:%d" % (fx, address, count))
         return self.store[self.decode(fx)].validate(address, count)
 
     def getValues(self, fx, address, count=1):
@@ -71,7 +72,7 @@ class ModbusSlaveContext(IModbusSlaveContext):
         :returns: The requested values from a:a+c
         '''
         if not self.zero_mode: address = address + 1
-        _logger.debug("getValues[%d] %d:%d" % (fx, address, count))
+        #_logger.debug("getValues[%d] %d:%d" % (fx, address, count))
         return self.store[self.decode(fx)].getValues(address, count)
 
     def setValues(self, fx, address, values):
@@ -82,7 +83,13 @@ class ModbusSlaveContext(IModbusSlaveContext):
         :param values: The new values to be set
         '''
         if not self.zero_mode: address = address + 1
-        _logger.debug("setValues[%d] %d:%d" % (fx, address, len(values)))
+        extra = {
+        'start_adrs' : address,
+        'end_adrs'  : address+len(values),
+        'valeurs' : str(values),
+        'nb_valeur' : len(values),		
+        }
+        _logger.debug("setValues[%d], start_adrs: %d, end_adrs: %d, Value : %s " % (fx, address, address+len(values), str(values)  ), extra=extra)
         self.store[self.decode(fx)].setValues(address, values)
 
 

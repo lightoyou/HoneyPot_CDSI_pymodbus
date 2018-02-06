@@ -18,7 +18,8 @@ from pymodbus.compat import iterkeys, imap, byte2int
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger("python-logstash-logger")
+#_logger = logging.getLogger("python-logstash-logger")
+_logger = logging.getLogger(__name__)
 
 
 #---------------------------------------------------------------------------#
@@ -445,7 +446,7 @@ class ModbusSocketFramer(IModbusFramer):
     #-----------------------------------------------------------------------#
     # Public Member Functions
     #-----------------------------------------------------------------------#
-    def processIncomingPacket(self, data, callback):
+    def processIncomingPacket(self, data, callback, client_address=None):
         ''' The new packet processing pattern
 
         This takes in a new request packet, adds it to the current
@@ -460,12 +461,12 @@ class ModbusSocketFramer(IModbusFramer):
         :param data: The new packet data
         :param callback: The function to send results to
         '''
-        _logger.debug(' '.join([hex(byte2int(x)) for x in data]))
+        #_logger.debug(' '.join([hex(byte2int(x)) for x in data]))
         self.addToFrame(data)
         while True:
             if self.isFrameReady():
                 if self.checkFrame():
-                    self._process(callback)
+                    self._process(callback,error=False, client_address=client_address)
                 else: self.resetFrame()
             else:
                 if len(self._buffer):
@@ -474,12 +475,12 @@ class ModbusSocketFramer(IModbusFramer):
                         self._process(callback, error=True)
                 break
 
-    def _process(self, callback, error=False):
+    def _process(self, callback, error=False, client_address=None):
         """
         Process incoming packets irrespective error condition
         """
         data = self.getRawFrame() if error else self.getFrame()
-        result = self.decoder.decode(data)
+        result = self.decoder.decode(data, client_address)
         if result is None:
             raise ModbusIOException("Unable to decode request")
         elif error and result.function_code < 0x80:

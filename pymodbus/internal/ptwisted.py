@@ -11,7 +11,8 @@ if IS_PYTHON2:
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger("python-logstash-logger")
+#_logger = logging.getLogger("python-logstash-logger")
+_logger = logging.getLogger(__name__)
 
 
 #---------------------------------------------------------------------------#

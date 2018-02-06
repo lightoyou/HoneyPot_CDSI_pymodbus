@@ -364,7 +364,7 @@ class ReportSlaveIdRequest(ModbusRequest):
 
         :returns: The populated response
         '''
-        identifier = b'Pymodbus'
+        identifier = b'Schneider Electrics'
         return ReportSlaveIdResponse(identifier)
 
     def __str__(self):

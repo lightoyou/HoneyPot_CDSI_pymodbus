@@ -22,8 +22,8 @@ from pymodbus.compat import socketserver, byte2int
 # Logging
 #---------------------------------------------------------------------------#
 import logging
-_logger = logging.getLogger('python-logstash-logger')
-
+#_logger = logging.getLogger("python-logstash-logger")
+_logger = logging.getLogger(__name__)
 
 #---------------------------------------------------------------------------#
 # Protocol Handlers
@@ -43,7 +43,7 @@ class ModbusBaseRequestHandler(socketserver.BaseRequestHandler):
             'ip_source'   : self.client_address[0],
             'port_source' : self.client_address[1],
         }
-        _logger.debug("Client Connected", extra = extra)
+        _logger.debug("Client Connected " + str(extra), extra = extra)
         self.running = True
         self.framer = self.server.framer(self.server.decoder)
         self.server.threads.append(self)
@@ -109,7 +109,7 @@ class ModbusSingleRequestHandler(ModbusBaseRequestHandler):
                 data = self.request.recv(1024)
                 if data:
                     if _logger.isEnabledFor(logging.DEBUG):
-                        _logger.debug("recv: " + " ".join([hex(byte2int(x)) for x in data]))
+                        _logger.debug("recv1 : " + " ".join([hex(byte2int(x)) for x in data]))
                     if isinstance(self.framer, ModbusAsciiFramer):
                         unit_address = int(data[1:3], 16)
                     elif isinstance(self.framer, ModbusBinaryFramer):
@@ -134,7 +134,7 @@ class ModbusSingleRequestHandler(ModbusBaseRequestHandler):
             #self.server.control.Counter.BusMessage += 1
             pdu = self.framer.buildPacket(message)
             if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug('udo : %s' % b2a_hex(pdu))
+                _logger.debug('udo send : %s' % b2a_hex(pdu))
             return self.request.send(pdu)
 
 
@@ -173,10 +173,11 @@ class ModbusConnectedRequestHandler(ModbusBaseRequestHandler):
             try:
                 data = self.request.recv(1024)
                 if not data: self.running = False
-                if _logger.isEnabledFor(logging.DEBUG):
-                    _logger.debug(' '.join([hex(byte2int(x)) for x in data]))
+                #if _logger.isEnabledFor(logging.DEBUG):
+                    #trame = ' '.join([hex(byte2int(x)) for x in data])
+                    #_logger.debug(" Recu connecté :" + trame)
                 # if not self.server.control.ListenOnly:
-                self.framer.processIncomingPacket(data, self.execute)
+                self.framer.processIncomingPacket(data, self.execute, self.client_address)
             except socket.timeout as msg:
                 if _logger.isEnabledFor(logging.DEBUG):
                     _logger.debug("Socket timeout occurred %s", msg)
@@ -201,8 +202,12 @@ class ModbusConnectedRequestHandler(ModbusBaseRequestHandler):
         if message.should_respond:
             #self.server.control.Counter.BusMessage += 1
             pdu = self.framer.buildPacket(message)
-            if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug('send: %s' % b2a_hex(pdu))
+            extra = {
+            'ip_source'   : self.client_address[0],
+            'port_source' : self.client_address[1],
+            }
+            #if _logger.isEnabledFor(logging.DEBUG):           
+            #    _logger.debug('requête traitée : %s' % b2a_hex(pdu), extra = extra)
             return self.request.send(pdu)
 
 
@@ -226,7 +231,7 @@ class ModbusDisconnectedRequestHandler(ModbusBaseRequestHandler):
                 if not data:
                     self.running = False
                 if _logger.isEnabledFor(logging.DEBUG):
-                    _logger.debug(' '.join([hex(byte2int(x)) for x in data]))
+                    _logger.debug(' recu 2 udp :'.join([hex(byte2int(x)) for x in data]))
                 # if not self.server.control.ListenOnly:
                 self.framer.processIncomingPacket(data, self.execute)
             except socket.timeout: pass
@@ -252,7 +257,7 @@ class ModbusDisconnectedRequestHandler(ModbusBaseRequestHandler):
             #self.server.control.Counter.BusMessage += 1
             pdu = self.framer.buildPacket(message)
             if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug('send: %s' % b2a_hex(pdu))
+                _logger.debug('send udp: %s' % b2a_hex(pdu))
             return self.socket.sendto(pdu, self.client_address)
 
 
@@ -302,7 +307,7 @@ class ModbusTcpServer(socketserver.ThreadingTCPServer):
         :param request: The request to handle
         :param client: The address of the client
         '''
-        _logger.debug("Started thread to serve client at " + str(client))
+        #_logger.debug("Started thread to serve client at " + str(client))
         socketserver.ThreadingTCPServer.process_request(self, request, client)
 
     def shutdown(self):
